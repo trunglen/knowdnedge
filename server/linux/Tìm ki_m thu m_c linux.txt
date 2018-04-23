@@ -1,0 +1,11 @@
+﻿find / -name php.ini
+Trong đó / là đường dẫn thư mục bạn muốn tìm (mình sử dụng luôn thư mục gốc), php.ini là tên file
+
+Lệnh locate cũng có tác dụng tương tự nhưng không phải server nào cũng được cài đặt và sử dụng được, tuy nhiên bạn cứ thử xem:
+
+locate php.ini
+
+- Hien thi so dong trong lenh vi
+ :set number
+===> Neu muon mo file nhay vao dong nao thi 
+ vi +30 /etc/vz/vz.conf

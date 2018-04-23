@@ -1,0 +1,4 @@
+install pip bang wget+python abc.py (python dc install cung rethinkdb)
+truoc het install python driver pip install rethinkdb
+rethinkdb dump 
+rethinkdb restore ten_file

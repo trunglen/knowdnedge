@@ -1,0 +1,4 @@
+ @Input() display: boolean;
+ 
+ @Output() displayChange = new EventEmitter<boolean>();
+sdung [(display)]

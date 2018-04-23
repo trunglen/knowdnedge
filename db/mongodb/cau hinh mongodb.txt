@@ -1,0 +1,20 @@
+mqserver:
+    - api: D:\Go\proj\src\cetm\qapi
+    - device D:\App\cetm-device
+    - app D:\App\qapp
+cau hinh mongodb nhu 1 service
+    - tao thu muc voi cau truc nhu sau 
+    D:\db + data
+             + log
+             +config.txt voi noi dung
+	##store data
+             dbpath=D:\db\data
+ 
+              ##all output go here
+              logpath=D:\db\log\mongo.log
+    - cd vao thu muc C:\Program Files\MongoDB\Server\3.4\bin chay lenh 
+              mongod.exe --config D:\db\config.txt
+    - kiem tra dung telnet telnet localhost 27017 (but telnet trong window program feature)
+    - restore db: mongorestore --db  bitel-auto D:\miraway\dump\bitel_auto [--port 1234 khi dang chay cua so mongo]
+    - backup db: mongodump -d bitel_auto-o D:\miraway\dump\bitel_backup
+    - chay mongo nhu service mongod --config D:\Working\Miraway\Mongo\MongoStore\config.txt --install (nho set path @@)

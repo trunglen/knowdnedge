@@ -1,0 +1,67 @@
+---------------Tao mot super user role (user administrator)------------
+use admin
+db.createUser(
+  {
+    user: "admin",
+    pwd: "admin@123",
+    roles: [ { role: "root", db: "admin" } ]
+  }
+)
+
+/////////root cung cap full moi quyen cua car role readWriteAnyDatabase, dbAdminAnyDatabase, userAdminAnyDatabase, clusterAdmin roles, restore, and backup roles////////
+/////////sau khi tao xong administrator vao file /etc/mongod.conf sua noi dung nhu sau
+net:
+ bindIp: 127.0.0.1
+security:
+ authorization: enabled
+ Nho viet theo format chuan tung dau cach sau do restart lai service//////////////////
+--------------Tao user truy cap db ehelp------------------------
+db.createUser(
+    {
+      user: "trunglv",
+      pwd: "trunglv",
+      roles: [
+         { role: "readWrite", db: "ehelp" },
+         { role: "readWrite", db: "medical" }
+      ]
+    }
+)
+--------------Thu hoi quyen ------------------------------------
+  db.revokeRolesFromUser(
+    "trunglen-ehelp",
+    [
+      { role: "readWrite", db: "ehelp" }
+    ]
+)
+
+https://docs.mongodb.com/manual/reference/security/
+db.auth()	Authenticates a user to a database.
+db.changeUserPassword()	Changes an existing user’s password.
+db.createUser()	Creates a new user.
+db.dropUser()	Removes a single user.
+db.dropAllUsers()	Deletes all users associated with a database.
+db.getUser()	Returns information about the specified user.
+db.getUsers()	Returns information about all users associated with a database.
+db.grantRolesToUser()	Grants a role and its privileges to a user.
+db.removeUser()	Deprecated. Removes a user from a database.
+db.revokeRolesFromUser()	Removes a role from a user.
+db.updateUser()	Updates user data.
+
+=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+real root user
+use admin
+db.createUser( { user: "trunglen",
+              pwd: "trungyeulen4ever",
+              roles: [ "userAdminAnyDatabase","readWriteAnyDatabase","dbAdminAnyDatabase","clusterAdmin" ] } )
+use wedding
+db.createUser({
+ "user":"trunglen",
+ "pwd":"trungyeulen4ever",
+    "roles":["readWrite"]
+ })
+use medical
+db.createUser({
+ "user":"trunglen",
+ "pwd":"trungyeulen4ever",
+    "roles":["readWrite"]
+ })

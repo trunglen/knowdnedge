@@ -1,0 +1,22 @@
+You can use Git Deploy Keys to avoid needing to remote onto servers, pull, enter creds and restart the server.
+
+Create your deploy keys in git (see https://help.github.com/articles/managing-deploy-keys)
+Add the key to your server
+If you have multiple projects you will need to config your ssh keys specifically for each project (see http://nerderati.com/2011/03/simplify-your-life-with-an-ssh-config-file/)
+vim ~/user/.ssh/config
+Host github-project1
+    User git
+    HostName github.com
+    IdentityFile ~/.ssh/github.project1.key
+Git clone/set remote for project via ssh
+git clone git@github-project1:orgname/some_repository.git
+Write scripts to start/stop/pull your app
+Call the script remotely via ssh
+ssh user@99.99.99.99 ‘source ~/.bash_profile;
+~/user/myscript.sh’
+Traps:
+
+use user “git” in /.ssh/config for the host reference, otherwise github will reject requests
+include ‘source ~/.bash_profile’ (or .bashrc, /etc/profile) in your script call to include environmental variables (ssh uses a very limited set by default)
+
+git clone git@wapi.github.com:truongminh/wapi.git

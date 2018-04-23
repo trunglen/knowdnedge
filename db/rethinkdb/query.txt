@@ -1,0 +1,45 @@
+r.expr({count:2, data:r.db('gh').table('notify').coerceTo('ARRAY')})
+
+
+
+   r.db('gh').table('shipment').filter(function(doc){
+     return   r.db('gh').table('shop').getAll(doc.getField('customer_id')).isEmpty()
+   }).pluck('customer_id')
+
+
+
+
+r.db('gh').table('shop').filter(function(doc) {
+    return doc.getField('create_date').le(1498669199).and(
+        doc.getField('create_date').ge(1498582800).and(
+           doc.getField('reference_code').match('^SALE002')
+        )
+      )
+}).pluck('id','create_date').merge(function(doc) {
+  return {'shipments':r.db('gh').table('shipment').filter(function(doc2){
+    return doc2.getField('customer_id').eq(doc.getField('id')).and(
+      doc2.getField('ctime').le(1498669199)
+    ).and(
+       doc2.getField('ctime').ge(1498582800)
+    )
+  }).count()
+  }
+}).group(function(doc) {
+  return r.epochTime(doc.getField('create_date')).date()
+}).ungroup().map(function(doc) {
+  return {
+    date:doc.getField('group').toISO8601(),
+    shops:doc.getField('reduction').count(),
+    shipment:doc.getField('reduction').getField('shipments').sum(),
+    accepted_shipments:r.db('gh').table('shipment').filter(function(doc2){
+        return doc2.getField('ctime').le(1498669199).and(
+           doc2.getField('ctime').ge(1498582800)
+        ).and(doc2.getField('status').eq('accepted'))
+      }).count(),
+    create_shipments:r.db('gh').table('shipment').filter(function(doc2){
+        return doc2.getField('ctime').le(1498669199).and(
+           doc2.getField('ctime').ge(1498582800)
+        ).and(doc2.getField('status').ne('canceled'))
+      }).count()
+  }
+})

@@ -1,0 +1,2 @@
+ Failed to unlink socket file /tmp/mongodb-27017.sock Operation not permitted
+=>>>>xoa  file nay restart lai

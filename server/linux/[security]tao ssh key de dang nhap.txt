@@ -1,0 +1,18 @@
+﻿1)luu Public Key tại ~/.ssh/authorized_keys
+ ssh-keygen -t rsa sinh ra 2 file public va ppk
+ coppy toan bo noi dung file public vao ~/.ssh/authorized_keys file ppk luu tru duoi may local
+2)bat che do dang nhap bang ssh key 
+ sua file /etc/ssh/sshd_config 
+	+PubkeyAuthentication yes
+	+AuthorizedKeysFile .ssh/authorized_keys
+ Sau do khoi dong lai SSH Service service sshd restart
+3)De tang bao mat tat dang nhap su dung mat khau bang cach sua file /etc/ssh/sshd_config PasswordAuthentication no
+sau do khoi dong lai service ssh: service sshd restart
+4)Tang cuong bao mat bang cach doi port mac dinh 22 
+ sua file sshd_config bo comment o doan #Port 22 thanh Port 2222
+ Mo port 2222 truoc khi thoat ra de phong khong dang nhap dc(hoac mo port truoc khi doi cong hoac reload ssh service sau khi mo port)
+  +iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 2222 -j ACCEPT
+  +service iptables save
+  +service iptables start
+  +service sshd reload
+  +Kiem tra port iptables -L -n

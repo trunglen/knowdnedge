@@ -1,0 +1,211 @@
+﻿1. Prerequisites
+
+Remove sendmail
+
+# yum remove sendmail
+Cài đặt DNS server , thêm Mail Server MX record vào forward và reverse zone . Bạn có thể tham khảo cách cài đặt DNS server trên CentOS 7 tại đây
+
+Tắt SELinux
+
+# nano /etc/sysconfig/selinux
+Thay SELINUX=enforcing thành SELINUX=disabled
+
+SELINUX=disabled
+Cài đặt EPEL Repository
+
+rpm -ivh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-6.noarch.rpm
+Mở port 80 trên firewall
+
+firewall-cmd --permanent --add-port=80/tcp
+Khởi động lại firewall
+
+firewall-cmd --reload
+2. Install , configure and testing Postfix
+
+Install Postfix
+
+yum install postfix
+Configure Postfix
+
+Edit file /etc/postfix/main.cf
+
+# nano etc/postfix/main.cf
+## Uncomment và đặt mail server FQDN ##
+myhostname = server.adminvietnam.org
+## Uncomment và đặt domain ##
+mydomain = adminvietnam.org
+## Uncomment ##
+myorigin = $mydomain
+## Uncomment và đặt ipv4 ##
+inet_interfaces = all
+## Đổi thành all ##
+inet_protocols = all
+## Comment ##
+#mydestination = $myhostname, localhost.$mydomain, localhost,
+## Uncomment ##
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+## Uncomment và thêm dải ip ##
+mynetworks = 192.168.1.0/24, 127.0.0.0/8
+## Uncomment ##
+home_mailbox = Maildir/
+Save file
+
+Start/restart dịch vụ Postfix
+
+# systemctl enable postfix
+# systemctl restart postfix
+Testing Postfix
+
+Trước tiên tạo user ‘luanpm‘ và đặt password
+
+# useradd luanpm
+# passwd luanpm
+Cài telnet
+
+# yum install telnet
+Kiểm tra
+
+# telnet localhost smtp
+Lưu ý : Những dòng in đậm dưới đây là do bạn nhập vào
+
+Trying ::1...
+ Connected to localhost.
+ Escape character is '^]'.
+ 220 server.admivietnam.org ESMTP Postfix
+ ehlo localhost
+ 250-server.admivietnam.org
+ 250-PIPELINING
+ 250-SIZE 10240000
+ 250-VRFY
+ 250-ETRN
+ 250-ENHANCEDSTATUSCODES
+ 250-8BITMIME
+ 250 DSN
+ mail from:<luanpm>
+ 250 2.1.0 Ok
+ rcpt to:<luanpm>
+ 250 2.1.5 Ok
+ data
+ 354 End data with <CR><LF>.<CR><LF>
+ Welcome to Adminvietnam mail server
+ .
+ 250 2.0.0 Ok: queued as 9AC752110D
+ quit
+ 221 2.0.0 Bye
+ Connection closed by foreign host.
+Chuyển đến thư mục của user ‘luanpm’ để xem mail đã nhận đc
+
+# cd /home/luanpm/Maildir/new/
+# cat 1460264935.Vfd00Ic4dd6M808471.server.adminvietnam.org
+59
+
+Như vậy Postfix đã hoạt động
+
+3. Install , configure and testing Dovecot
+
+Cài đặt Dovecot
+
+# yum install dovecot
+Cấu hình Dovecot
+
+Sửa file dovecot.conf
+
+# nano /etc/dovecot/dovecot.conf
+## Umcomment ##
+protocols = imap pop3 lmtp
+Sửa file 10-mail.conf
+
+# nano /etc/dovecot/conf.d/10-mail.conf
+## Uncomment ##
+mail_location = maildir:~/Maildir
+Sửa file 10-auth.conf
+
+# nano /etc/dovecot/conf.d/10-auth.conf
+## Uncomment ##
+disable_plaintext_auth = yes
+## Thêm từ : "login" ##
+auth_mechanisms = plain login
+Sửa file 10-master.conf
+
+# nano /etc/dovecot/conf.d/10-master.conf
+## Uncomment và thêm "postfix"
+#mode = 0600
+   user = postfix
+  group = postfix
+Khởi động dịch vụ Dovecot
+
+# systemctl enable dovecot
+# systemctl start dovecot
+Testing Dovecot
+
+# telnet localhost pop3
+Lưu ý : Những dòng in đậm dưới đây là do bạn nhập vào
+
+Trying ::1...
+ Connected to localhost.
+ Escape character is '^]'.
+ +OK Dovecot ready.
+ user luanpm
+ +OK
+ pass 123456
+ +OK Logged in.
+ retr 1
+ +OK 447 octets
+ Return-Path: <luanpm@adminvietnam.org>
+ X-Original-To: luanpm
+ Delivered-To: luanpm@adminvietnam.org
+ Received: from localhost (localhost [IPv6:::1])
+ by server.admivietnam.org (Postfix) with ESMTP id 9AC752110D
+ for <luanpm>; Sun, 10 Apr 2016 12:07:49 +0700 (ICT)
+ Message-Id: <20160410050805.9AC752110D@server.admivietnam.org>
+ Date: Sun, 10 Apr 2016 12:07:49 +0700 (ICT)
+ From: luanpm@adminvietnam.org
+
+ Welcome to Adminvietnam mail server
+ .
+ quit
+ +OK Logging out.
+ Connection closed by foreign host.
+3. Install , Configure Squirrelmail
+
+Cài đặt Squirrelmail
+
+# yum install squirrelmail
+Cấu hình Squirrelmail
+
+# cd /usr/share/squirrelmail/config/
+# ./conf.pl
+Một list các lựa chọn cài đặt sẽ hiện ra . Bạn chọn số ‘2‘ để vào phần cài đặt server
+
+60
+
+Phần cài đặt server , bạn tiếp tục chọn ‘3‘ để thay đổi Sendmail thành SMTP 
+
+61
+
+Sau khi chọn ‘3’ bạn sẽ nhận được thông báo chọn tiếp ‘2’
+
+62
+
+Sau đó bấm ‘S‘ để save và ‘Q‘ để thoát
+
+Tạo Squirrelmail Virtualhost trong apache config
+
+# nano /etc/httpd/conf/httpd.conf
+Thêm các dòng sau vào cuối file
+
+Alias /webmail /usr/share/squirrelmail
+<Directory /usr/share/squirrelmail>
+Options Indexes FollowSymLinks
+RewriteEngine On
+AllowOverride All
+DirectoryIndex index.php
+Order allow,deny
+Allow from all
+</Directory>
+Khởi động lại dịch vụ Apache
+
+# systemctl restart httpd
+Truy cập vào webmail để kiểm tra  http://192.168.2.123/webmail
+
+Link https://www.adminvietnam.org/local-mailserver-postfix-dovecot/2299/

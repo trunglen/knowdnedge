@@ -1,0 +1,15 @@
+﻿Việc cài đặt webmin trên centos rất đơn giản:
+Để xem version bạn cần download tại đây: http://www.webmin.com/download.html
+Vì mình cài trên CentOS nên mình download gói này:
+wget http://prdownloads.sourceforge.net/webadmin/webmin-1.420-1.noarch.rpm
+Cài đặt:
+rpm –install webmin-1.420-1.noarch.rpm
+Đăng nhập:
+https://địa_chỉ_IP_hoặc_domain_của_bạn:10000/
+Nếu bạn sử dụng người dùng không phải root (sudo để cài) thì phải tạo người dùng ban đầu bằng lệnh
+sudo /usr/libexec/webmin/changepass.pl /etc/webmin root <newpasswd>Khi đó người dùng root/<newpasswd> sẽ được khởi tạo và ta có thể login vào webmin với tài khoản trên.
+Nếu muốn httpd và mysql first load khi khởi động máy thì ta chỉ cần thêm dòng lệnh:
+chkconfig httpd on
+chkconfig mysqld on
+Gỡ bỏ Webmin nếu muốn
+/etc/webmin/uninstall.sh

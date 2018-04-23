@@ -1,0 +1,31 @@
+tao subdomain nhu anh
+1) cai dat nginx tren server yum install nginx (chua co thi update yum) tham khao cac lenh duoi
+- sudo yum install epel-release To add the CentOS 7 EPEL repository
+- sudo yum install nginx Install Nginx
+- sudo systemctl start nginx Start Nginx
+- If you are running a firewall, run the following commands to allow HTTP and HTTPS traffic:
+  sudo firewall-cmd --permanent --zone=public --add-service=http 
+  sudo firewall-cmd --permanent --zone=public --add-service=https
+  sudo firewall-cmd --reload
+2) test cac subdomain vua tao bang cach go dia chi tren browser xem co vao trang mac dinh cua nginx k 
+3) tao cac file config cho subdomain trong /etc/nginx/conf.d/api.ehelp.com.vn.conf /etc/nginx/conf.d/cms.ehelp.com.vn.conf voi ndung
+server {
+    listen 80;
+    server_name api.ehelp.com.vn;
+
+    location / {
+        proxy_pass http://45.123.96.110:8142;
+    }
+}
+
+
+tham khao link setup https://gist.github.com/soheilhy/8b94347ff8336d971ad0
+cau hinh cho webapp ehelp
+server {
+    listen 80;
+    server_name cms.ehelp.com.vn;
+
+    location /{
+        proxy_pass http://45.123.96.110:8080/admin;
+    }
+}

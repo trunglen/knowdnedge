@@ -1,0 +1,58 @@
+﻿1. Tạo thư mục cho Certificate
+	- sudo mkdir /etc/nginx/ssl
+    Di chuyển đến folder
+	- cd /etc/nginx/ssl
+2. Tạo Server Key và Certificate Signing Request
+	Tạo private server key. Chú ý ghi nhớ pass khi đăng ký nhé.
+	- sudo openssl genrsa -des3 -out server.key 1024
+	Tạo certificate signing request
+	- sudo openssl req -new -key server.key -out server.csr
+	Tiếp theo điền các thông tin như mẫu bên dưới. Chú ý cái Common name cần nhập chính xác domain của bạn hoặc IP nếu ko có. 
+	Phần challenge password và optional company name để trống.
+		Country Name (2 letter code) [AU]:VI
+		State or Province Name (full name) [Some-State]:Ha Noi
+		Locality Name (eg, city) []:HN
+		Organization Name (eg, company) [Internet Widgits Pty Ltd]:Awesome Inc
+		Organizational Unit Name (eg, section) []:Dept of Merriment
+		Common Name (e.g. server FQDN or YOUR name) []:example.com                  
+		Email Address []:webmaster@awesomeinc.com
+3. Xóa Passphrase vì thông tin này không cần thiết
+	sudo cp server.key server.key.org
+	sudo openssl rsa -in server.key.org -out server.key
+4. Sign SSL Certificate
+	Mình sẽ đăng ký chứng chỉ hết hạn sau 1 năm nữa (365):
+	sudo openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+5. Cài đặt Certificate
+	Mở SSL config
+	- nano /etc/nginx/conf.d/ssl.conf
+	hỉnh lại phần dưới HTTPS Server như thông tin sau (chú ý thay example.com):
+	# HTTPS server
+	server {
+		listen       443;
+		server_name example.com;
+
+		ssl on;
+		ssl_certificate /etc/nginx/ssl/server.crt;
+		ssl_certificate_key /etc/nginx/ssl/server.key; 
+	}
+	Khởi động lại nginx
+	 - /etc/init.d/nginx restart
+	 Truy cập vào https://youraddress, bạn sẽ thấy website hoạt động bình thường.
+	 **********************************
+ Khi đăng ký xong chứng chỉ SSL Certificate bạn sẽ có tất cả 3 thông tin bao gồm:
+	CSR Code csr
+	Khóa riêng (SSL Private Key) ppk
+	SSL Certificate crt
+	csr + ppk -> crt khi  setup server https chi quan tam csr, crt(csr chinh la chu ki so de ma hoa cac request)
+ Cac buoc chung thuc nhu sau
+	Browser yeu cau server xac dinh danh tinh
+	Server gui cho browser ssl certificate (file .crt)
+	Trinh duyet kiem tra chung chi co hop le k bang cach gui chung chi nay den mot may chu luu tru cac chung tri so da phe duyet
+	website gui nguoc lai chu ki so de ma hoa va giai ma tat ca cac giao dich tiep theo (file csr)
+	/////////////////////////////////////////
+	script gen key
+	#!/bin/sh
+	openssl genrsa -out key.pem
+	openssl req -new -key key.pem -out csr.pem
+	openssl x509 -req -days 9999 -in csr.pem -signkey key.pem -out cert.pem
+	rm csr.pem

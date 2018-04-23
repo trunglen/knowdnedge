@@ -1,0 +1,82 @@
+﻿---------------Có 4 file chính quản lý người sử dụng:-----------------------
+
+/etc/passwd: Giữ tài khoản người dùng và thông tin mật khẩu. File này giữ các thông tin quan trọng về các tài khoản trên hệ thống Unix.
+
+/etc/shadow: Giữ mật khẩu được biên thành mật mã của tài khoản tương ứng. Không phải tất cả các hệ thống đều hỗ trợ file này.
+
+/etc/group: File này giữ thông tin nhóm cho mỗi tài khoản.
+
+/etc/gshadow: File này giữ các thông tin tài khoản nhóm bảo mật.
+-----------------Dưới đây là các lệnh có trong phần lớn các hệ thống Unix để tạo và quản lý các tài khoản cá nhân và nhóm.--------------------
+useradd	Thêm các tài khoản cá nhân tới hệ thống. useradd -d homedir -g groupname -m -s shell -u userid accountname sau khi tao doi mat khau bang cach  passwd mcmohd20
+usermod	Chỉnh sửa các thuộc tính của tài khoản cá nhân.
+userdel	Xóa các tài khoản cá nhân từ hệ thống.
+groupadd	Thêm các tài khoản nhóm tới hệ thống.
+groupmod	Chỉnh sửa các thuộc tính của tài khoản nhóm.
+groupdel	Dỡ bỏ các tài khoản nhóm khỏi hệ thống.
+
+1. Quản lý người dùng.
+  a. Thêm người dùng.
+   Cấu trúc lệnh:
+
+           useradd option user_name
+
+     option:
+                 - u:  UID
+                 - g:  GID - Nhóm chính
+                 - G: GID - Nhóm phụ
+                 - c : Comment
+                 - d : Directory
+                 - s : shell
+  b. Mật khẩu người dùng.
+   Cấu trúc lệnh:
+
+          passwd user_name
+
+  c. Chỉnh sửa người dùng.
+   Cấu trúc lệnh:
+
+          usermod option user_name
+
+     option: giống mục a.
+  d. Xóa người dùng.
+   Cấu trúc lệnh:
+
+         userdel [-r] user_name
+
+   Tham số -r xóa thư mục home của người dùng.
+  e. Khóa và mở tài khoản người dùng.
+      Khóa:
+
+          passwd -l         or           usermod -L
+
+
+      Mở:
+
+          passwd -u         or          usermod -U
+
+
+2. Quản lý nhóm.
+  a. Thêm nhóm.
+   Cấu trúc lệnh:
+
+           groupadd option group_name
+
+     option:
+                 - g:  GID - Nhóm chính
+
+  b. Mật khẩu nhóm.
+   Cấu trúc lệnh:
+
+          gpasswd group_name
+
+  c. Chỉnh sửa nhóm.
+   Cấu trúc lệnh:
+
+          groupmod
+
+
+  d. Xóa nhóm..
+   Cấu trúc lệnh:
+
+         groupdel group_name

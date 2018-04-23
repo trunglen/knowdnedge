@@ -1,0 +1,189 @@
+db.getCollection('service').aggregate([
+
+{
+   $lookup:{
+       from:'tool',
+      localField:'tools',
+        foreignField:'_id',
+       as:'tools'
+   }    
+},{
+    $project:{
+        _id:'$id',
+        $name
+       tool:'$tools.name'   
+     }
+ }
+])
+
+db.getCollection('aggregate').aggregate([
+{
+    $group:{
+     _id:{
+        "survey_name":"$survey_name"   
+      },
+     avg_point:{
+       $avg:"$average_point"    
+     },
+     high:{
+        $sum:{$cond:[{$eq:["$high",true]},1,0]}
+     },
+     credit:{
+        $sum:{$cond:[{$eq:["$credit",true]},1,0]}
+     },
+     medium:{
+        $sum:{$cond:[{$eq:["$medium",true]},1,0]}
+     },
+     low:{
+        $sum:{$cond:[{$eq:["$low",true]},1,0]}
+     }
+    }
+}
+])
+
+db.getCollection('result').aggregate([
+{
+    $unwind:"$survey_detail"
+},
+{
+    $project:{
+        created_at:"$created_at",
+        uname:"$uname",
+        store:"$store",
+        device:"$device",
+        point:{$sum:"$survey_detail.feedback_detail.point"},
+        max_point:{$sum:"$survey_detail.feedback_detail.max_point"},
+        survey_detail:"$survey_detail"
+    }
+},
+{
+    $group: {
+        _id:{
+            created_at:"$created_at",
+            uname:"$uname",
+            store:"$store",
+            device:"$device"
+    
+        },
+            survey_detail:{$addToSet:"$survey_detail"},
+            point:{$sum:"$point"},
+            max_point:{$sum:"$max_point"}
+    }
+},
+{
+    $project:{
+        _id:0,
+        created_at:"$_id.created_at",
+        uname:"$_id.uname",
+        store:"$_id.store",
+        device:"$_id.device",
+        point:{$sum:"$point"},
+        max_point:{$sum:"$max_point"},
+        avg:{$divide:["$point","$max_point"]},
+        survey_detail:"$survey_detail"
+    }
+}
+])
+
+db.getCollection('result').aggregate([
+{
+    $unwind:'$survey_detail'
+},
+{
+    $project: {
+        created_at:'$created_at',
+        uname:'$uname',
+        store:'$store',
+        device:        "$device",
+        point:         {$sum: "$survey_detail.feedback_detail.point"},
+        max_point:     {$sum: "$survey_detail.feedback_detail.max_point"},
+        survey_detail: "$survey_detail",
+    }
+},
+{
+    $group: {
+			"_id": {
+				"created_at": "$created_at",
+				"uname":      "$uname",
+				"store":      "$store",
+				"device":     "$device",
+			},
+			"survey_detail": {"$addToSet": "$survey_detail"},
+			"point":         {"$sum": "$point"},
+			"max_point":     {"$sum": "$max_point"}
+		}
+},
+{
+    "$project": {
+            "_id":           0,
+            "created_at":    "$_id.created_at",
+            "uname":         "$_id.uname",
+            "store":         "$_id.store",
+            "device":        "$_id.device",
+            "point":         {"$sum": "$point"},
+            "max_point":     {"$sum": "$max_point"},
+            "avg":           {"$divide": ["$point", "$max_point"]},
+            "survey_detail": "$survey_detail",
+    }
+}
+])
+
+db.getCollection('result').aggregate([
+{
+    $match:{
+        campaign_id:'CAM_Vhw0f'
+    }
+},
+{$match:{}},
+{
+    $group: {
+        _id: {
+            "ctime":'$ctime',
+            
+        },
+        quanity: {
+                $sum:1
+            }
+    }
+},
+{
+    $project:{
+        day:"$_id.ctime",
+        quanity:"$quanity"
+    }
+
+}
+])
+
+db.getCollection('result').aggregate([
+{
+    $group: {
+        _id:"$store",
+        store:{$first:"$store"},
+        high:{$sum:{$cond:[ { $and: [ {$gte:["$average_point",0.65]}, {$lte:["$average_point",1]}] } ,1,0]}},
+         credit:{$sum:{$cond:[ { $and: [ {$gte:["$average_point",0.65]}, {$lte:["$average_point",0.85]}] } ,1,0]}},
+         medium:{$sum:{$cond:[ { $and: [ {$gte:["$average_point",0.5]}, {$lte:["$average_point",0.65]}] } ,1,0]}}
+    }
+}
+])
+
+db.getCollection('result').aggregate([
+{
+    $unwind:'$survey_detail'
+},
+{
+    $match:{
+        'survey_detail.survey_id':'SUR_8Qhth'
+    }
+},
+{
+    $unwind:'$survey_detail.feedback_detail'
+},
+{
+    $group:{
+        _id:'$survey_detail.feedback_detail.content',
+        answers:{$push:'$survey_detail.feedback_detail.answer'}
+answers:{$push:{answer:'$survey_detail.feedback_detail.answer',store:'$store'}}
+    }
+},
+])
