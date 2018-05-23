@@ -14,3 +14,4 @@ Bước đầu tiên để trang web của chúng tôi được xếp hạng là
 Hiện tại, chúng ta sẽ tập trung trang chủ của chúng ta (trang đích của chúng ta) vào thứ hạng cho một từ khóa không phải là thương hiệu hoặc tên công ty của chúng ta. Khi chúng ta làm điều đó và có được thứ hạng , chúng ta có thể phân nhánh thành các từ khóa khác và bắt đầu thống trị bộ máy tìm kiếm.
 4) Keyword Research
 Điều đầu tiên chúng ta cần làm là tìm ra từ khóa đó là gì. Tùy thuộc vào mức độ phổ biến của trang web của chúng tôi và thời gian tồn tại của nó, mức độ lưu lượng truy cập và khó khăn mà chúng tôi sẽ nhận được từ nỗ lực này có thể thay đổi.
+https://medium.com/startup-grind/seo-is-not-hard-a-step-by-step-seo-tutorial-for-beginners-that-will-get-you-ranked-every-single-1b903b3ab6bb
