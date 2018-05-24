@@ -1,0 +1,16 @@
+﻿>>>>>>install electron 
+npm install electron -g
+>>>>>>build angular
+copy file main.js vào thư mục dist
+>>>>>>npm init trong dist
+>>>>>>npm install electron --save-dev
+>>>>>>electron .
+Chú ý  win.loadURL(`file://${__dirname}/dist/index.html`)
+
+Tiep theo chon 1 package-tool
+electron-forge
+electron-builder
+electron-packager
+>>>>>>npm install electron-packager -g
+>>>>>>npm install electron-packager --save-dev
+>>>>>>electron-packager . --platform=win32
