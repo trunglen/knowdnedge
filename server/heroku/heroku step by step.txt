@@ -1,0 +1,9 @@
+1) download heroku ve may tinh tim o cac bai viet get started vi du nhu  https://devcenter.heroku.com/articles/getting-started-with-go#set-up va cai len
+2) heroku login
+3) tao app moi: heroku create (neu la nodejs de y cach run trong package.json - node.)
+4) day app len va deploy git push heroku master
+Note:
+- Neu muon su dung mongodb tao add on mlab trong resource gan vs app da tao
+De lay url toi mongodb go heroku config 
+- Xem log cua app cd vao thu muc chua app: heroku logs --tail
+- luu y khi checkout app tu git sang may tinh khac phai remote den heroku ms co the push dc heroku git:remote -a yourapp

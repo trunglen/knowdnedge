@@ -1,0 +1,5 @@
+1) chuan bi tool build kieu nhu npm go get -u github.com/kardianos/govendor
+2) build ra file bin va set path environment
+3) cd vao app nhap govendor init
+4) update cac dependency govendor fetch +out tham khao them https://github.com/kardianos/govendor/blob/master/doc/faq.md
+5) tao file Procfile vs noi dung web: seed (seed ten thu muc chua app)

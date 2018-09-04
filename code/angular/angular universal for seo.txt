@@ -1,0 +1,160 @@
+﻿================>>>>>>>for <5 https://hackernoon.com/deploy-angular-universal-w-firebase-ad70ea2413a1====================
+================>>>>>>>for 6 https://hackernoon.com/deploying-angular-universal-v6-with-firebase-c86381ddd445 ===========
+1) để build và render universal app: npm install --save @angular/platform-server
+2) tạo thêm app đê render html server side
+// .angular-cli.json
+{
+    ...
+    apps: [
+        { /* default config */ },
+        {
+            "name": "ssr",
+            "root": "src",
+            "outDir": "functions/dist-ssr",
+            "assets": ["assets", "favicon.ico"],
+            "index": "index.html",
+            "main": "main-ssr.ts",
+            "test": "test.ts",
+            "tsconfig": "tsconfig.app-ssr.json",
+            "prefix": "app",
+            "scripts": [],
+            "environmentSource": "environments/environment.ts",
+            "environments": {
+                "dev": "environments/environment.ts",
+                "prod": "environments/environment.prod.ts"
+            },
+            "platform": "server"
+        }    
+    ],
+    ...
+}
+3) tao module server
+// src/app/app.server.module.ts
+import { NgModule } from '@angular/core';
+import { ServerModule } from '@angular/platform-server';
+import { AppModule } from './app.module';
+import { AppComponent } from './app.component';
+@NgModule({
+    imports: [
+        ServerModule,
+        AppModule
+    ],
+    bootstrap: [AppComponent]
+})
+export class AppServerModule { }
+--------------------------------
+entry point cho AppServerModule 
+// src/main-ssr.ts
+export { AppServerModule } from './app/app.server.module';
+--------------------------------
+tạo file cấu hình ts 
+Create the tsconfig for the server version. Similar to the browser version except for angularCompilerOptions.entryModule which 
+will reference the entry module for the server version that we just created. 
+This is also referenced in.angular-cli.json configuration as tsconfig.
+/ src/tsconfig.app-ssr.json
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/app",
+        "baseUrl": "./",
+        "module": "commonjs",
+        "types": []
+    },
+    "exclude": [
+        "test.ts",
+        "**/*.spec.ts"
+    ],
+    "angularCompilerOptions": {
+        "entryModule": "app/app.server.module#AppServerModule"
+    }
+}
+4) Chuyển đổi server trong app-browser module
+// src/app/app.module.ts
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { AppComponent } from './app.component';
+const APP_ID = 'angular-universal-firebase';
+@NgModule({
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule.withServerTransition({ appId: APP_ID })
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
+})
+export class AppModule { }
+5) 7. Build browser và server versions của app
+- browser ng build -prod
+- server ng build -aot -app ssr
+===============>>>>>Bây giờ có thư mục dist functions/dist-ssr trong root
+++++++++++++++++++++++++Sử dụng firebase để deploy+++++++++++++++++++++++
+- firebase login
+- firebase init -> chọn function hosting chấp nhận tất cả cài đặt mặc định lát sẽ cấu hình trong file json sau
+- cd functions ->sửa file package.json coppy các thư viện cần của angular4 dựa vào package.json ở root cài đặt tất cả các package cần thiết cho function (nhớ thư viện express)
+// functions/package.json
+{
+    "name": "functions",
+    "description": "Cloud Functions for Firebase",
+    "dependencies": {
+        "@angular/animations": "^4.3.5",
+        "@angular/common": "^4.3.5",
+        "@angular/compiler": "^4.3.5",
+        "@angular/core": "^4.3.5",
+        "@angular/forms": "^4.3.5",
+        "@angular/http": "^4.3.5",
+        "@angular/platform-browser": "^4.3.5",
+        "@angular/platform-server": "^4.3.5",
+        "express": "^4.15.4",
+        "firebase-admin": "~4.2.1",
+        "firebase-functions": "^0.5.7",
+        "rxjs": "^5.4.3",
+        "zone.js": "^0.8.16"
+    },
+    "private": true
+}
+- coppy thư mục dist build lúc trước của browser vào function đồng thời xóa file index.html trong dist ở root project (k phải dist vừa cop vào functions)
+anh tham khao https://cdn-images-1.medium.com/max/800/1*lYbueS_mQvcti6p3isjiMg.png
+- Taọ firebase function để serve app tham khảo
+We’re going to use functions.https.onRequest Firebase function type to send the response from an express server. There are a lot of things going on in this file but the most notable are:
+
+Importing AppServerModuleNgFactory which was generated from Part I: Step 7 — server version.
+Creating an index variable which is getting the index.html file we generated from Part I: Step 7 — browser version.
+Using renderModuleFactory to generate an html file that we send as a response with url and document parameters. 
+• url parameter determines which route of the app is going to be rendered. Specifying this allows renderModuleFactory to build the html of that route.
+• document is the full document HTML of the page to render. In this case, it will be the browser version index.html of the app.
+
+// functions/index.js
+require('zone.js/dist/zone-node');
+const functions = require('firebase-functions');
+const express = require('express');
+const path = require('path');
+const { enableProdMode } = require('@angular/core');
+const { renderModuleFactory } = require('@angular/platform-server');
+const { AppServerModuleNgFactory } = require('./dist-ssr/main.bundle');
+enableProdMode();
+const index = require('fs')
+    .readFileSync(path.resolve(__dirname, './dist/index.html'), 'utf8')
+    .toString();
+let app = express();
+app.get('**', function(req, res) {
+    renderModuleFactory(AppServerModuleNgFactory, {
+        url: req.path,
+        document: index
+    }).then(html => res.status(200).send(html));
+});
+exports.ssr = functions.https.onRequest(app);
+
+- Cấu hình lại firebase hosting
+// firebase.json
+{
+    "hosting": {
+        "public": "dist",
+        "rewrites": [{
+            "source": "**",
+            "function": "ssr"
+        }]
+    }
+}
+exports.ssr = functions.https.onRequest(app);
