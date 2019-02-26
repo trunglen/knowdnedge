@@ -1,0 +1,6 @@
+1) cai dat: npm install -g ionic cordova
+2) tao project ionic start firstapp
+
+Got issues with the installation of Ionic 2 or the creation of your project? Have a look at this article from the official docs: https://ionicframework.com/docs/setup/installation/
+
+Do you want to learn more about the CLI and available commands? The following article helps: https://ionicframework.com/docs/cli/

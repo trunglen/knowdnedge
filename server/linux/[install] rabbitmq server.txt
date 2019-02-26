@@ -1,0 +1,16 @@
+1) install erlang (https://github.com/rabbitmq/erlang-rpm/releases)
+wget https://github.com/rabbitmq/erlang-rpm/releases/download/v21.2.6/erlang-21.2.6-1.el6.x86_64.rpm
+sudo yum install erlang-21.2.6-1.el6.x86_64.rpm
+2)install rabbitmq server (http://www.rabbitmq.com/install-rpm.html#downloads)
+wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.7.12/rabbitmq-server-3.7.12-1.el7.noarch.rpm
+sudo yum install rabbitmq-server-3.7.12-1.el7.noarch.rpm
+chkconfig rabbitmq-server on --khoi dong cung linux
+/sbin/service rabbitmq-server start
+
+/sbin/service rabbitmq-server stop
+3)set up management plugin (web base)
+rabbitmq-plugins enable rabbitmq_management
+http://192.168.3.252:15672/cli/rabbitmqadmin
+
+xem them https://kipalog.com/posts/Tim-hieu-RabbitMQ---Phan-1
+file cau hinh mau cua rabbitmq /usr/share/doc/rabbitmq-server-3.5.2/
