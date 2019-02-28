@@ -1,0 +1,10 @@
+1) vao trang download mongodb chon RHEL7.0 Linux 64 cho Centos 7 64bit
+https://www.mongodb.com/download-center/community?jmp=docs
+2) wget https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.0/x86_64/RPMS/mongodb-org-server-4.0.6-1.el7.x86_64.rpm
+3) yum install mongodb-org-server-4.0.6-1.el7.x86_64.rpm
+4) start service service mongod start
+5) khoi dong cung he thong systemctl enable mongod.service (mot so he thong cu chkconfig service on)
+--- Kiem tra ds service khoi dong cung he thong: systemctl list-units (hoac chkconfig list)
+========luu y============================
+1) config mongodb trong /etc/mongod.conf
+2) file bin mongod trong /usr/bin
