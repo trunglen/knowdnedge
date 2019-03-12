@@ -1,0 +1,4 @@
+tham khao https://github.com/nodesource/distributions/blob/master/README.md#debinstall
+1) curl -sL https://rpm.nodesource.com/setup_11.x | bash -
+2) yum install -y nodejs
+3) 

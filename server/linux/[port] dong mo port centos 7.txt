@@ -1,3 +1,4 @@
+﻿=================Cach 1======================
 Use this command to find your active zone(s):
 
 firewall-cmd --get-active-zones
@@ -12,3 +13,35 @@ firewall-cmd --zone=public --add-port=2888/tcp --permanent
 Then remember to reload the firewall for changes to take effect.
 
 firewall-cmd --reload
+=================Cach 2======================
+Mở port VPS
+
+Ví dụ để mở port xxx, bạn hãy thực hiện lệnh sau:
+
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport xxx -j ACCEPT
+Sau đó lưu lại cấu hình và khởi động lại iptables
+
+service iptables save
+service iptables restart
+Đóng port VPS
+
+Để đóng port bất kỳ, bạn chỉnh sửa trực tiếp file /etc/sysconfig/iptables, comment những dòng có port cần đóng.
+
+nano /etc/sysconfig/iptables
+Sau đó lưu lại cấu hình và khởi động lại iptables
+
+service iptables save
+service iptables restart
+Kiểm tra lại port đang mở
+
+Danh sách toàn bộ port đang mở:
+
+iptables -L -n
+Kiểm tra port đang được dùng bởi service nào:
+
+netstat -anp | grep 80
+hoặc
+
+lsof -i | grep 80
+
+Reset iptables: iptables -F

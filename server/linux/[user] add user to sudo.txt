@@ -1,5 +1,5 @@
-Step 1: Add the User
-It�s just one simple command to add a user. In this case, we�re adding a user called mynewuser :
+﻿Step 1: Add the User
+It’s just one simple command to add a user. In this case, we’re adding a user called mynewuser :
 
 adduser mynewuser
 
@@ -17,7 +17,7 @@ Find the following code:
 ## Allow root to run any commands anywhere
 root ALL=(ALL) ALL
 
-In this case, we�re granting root privileges to the user mynewuser . Add the following below that code:
+In this case, we’re granting root privileges to the user mynewuser . Add the following below that code:
 
 mynewuser ALL=(ALL) ALL
 
@@ -26,3 +26,43 @@ xong xuoi chay lenh
 yum update
 kiem tra co quyen sudo chua sudo -v
 chua dc Sorry, user [username] may not run sudo on [hostname].
+
+## cho phep user moi ssh vao sever (neu khong lam buoc nay co tinh ssh se bi banned ip ssh)
+Disable SSH Root login
+Để disable ssh root login, bạn mở file /etc/ssh/sshd_config, sau đó tìm đến dòng:
+
+#PermitRootLogin no
+
+Bỏ kí tự # trước dòng đó:
+
+PermitRootLogin no
+
+Restart lại SSH:
+
+#/etc/init.d/sshd restart
+
+Bây giờ, bạn sẽ không truy cập trực tiếp tài khoản root từ ssh được nữa.
+
+login as: root
+
+Access denied
+
+root@172.31.41.51's password:
+
+Enable SSH Root login
+Bạn mở file /etc/ssh/sshd_config, sau đó tìm đến dòng:
+
+PermitRootLogin no
+
+Thêm # trước dòng đó:
+
+#PermitRootLogin no
+
+Restart lại SSH:
+
+#PermitRootLogin no
+
+Giới hạn User SSH login
+Để giới hạn 1 số lượng tài khoản được login ssh vào hệ thống, bạn mở file /etc/ssh/sshd_config, tìm đến dòng:
+
+AllowUsers
