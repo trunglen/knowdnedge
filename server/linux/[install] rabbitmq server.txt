@@ -11,6 +11,8 @@ chkconfig rabbitmq-server on --khoi dong cung linux
 3)set up management plugin (web base)
 rabbitmq-plugins enable rabbitmq_management
 http://192.168.3.252:15672/cli/rabbitmqadmin
+======su dung mqtt ========== http://www.rabbitmq.com/mqtt.html
+rabbitmq-plugins enable rabbitmq_mqtt 
 
 xem them https://kipalog.com/posts/Tim-hieu-RabbitMQ---Phan-1
-file cau hinh mau cua rabbitmq /usr/share/doc/rabbitmq-server-3.5.2/
+file cau hinh mau cua rabbitmq /usr/share/doc/rabbitmq-server-3.5.2/ co the ghi de bang cach copy vao /etc/rabbitmq/rabbitmq.config

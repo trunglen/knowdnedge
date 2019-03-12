@@ -1,0 +1,11 @@
+1) xem dung luong thu muc va file
+du -sh *
+2) xem dung luong o dia cung
+df %% df -h (xem thong tin them MB GB)
+3) xem dung luong ram trong
+free -m hoac cat /proc/meminfo
+warning: 
+- Available memory hoac free cua -/+ buffers/cache tien den 0
+- Muc su dung cua swap gia tang
+3) xem thong tin cpu
+lscpu

@@ -1,0 +1,3 @@
+removing the mongod.lock file under your data folder (in my case is /data/mongodb/)
+changing the permissions: sudo chown -R mongodb:mongodb /data/mongodb/ (neu invalid user thi dung mongod:mongod)
+and several reboots..
