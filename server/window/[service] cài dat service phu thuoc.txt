@@ -1,0 +1,12 @@
+Phụ thuộc vào một dịch vụ khác:
+sc config ServiceA depend= ServiceB
+Trên đây có nghĩa là ServiceA sẽ không bắt đầu cho đến khi ServiceB bắt đầu. Nếu bạn dừng ServiceB, ServiceA sẽ tự động dừng lại.
+
+Phụ thuộc vào nhiều dịch vụ khác:
+sc config ServiceA depend= ServiceB/ServiceC/ServiceD
+Trên đây có nghĩa là ServiceA sẽ không bắt đầu cho đến khi ServiceB, ServiceC và ServiceD bắt đầu. Nếu bạn dừng bất kỳ ServiceB, ServiceC hoặc ServiceD, ServiceA sẽ tự động dừng lại.
+
+Để xóa tất cả các phụ thuộc:
+sc config ServiceA depend= /
+Để liệt kê các phụ thuộc hiện tại:
+sc qc ServiceA
